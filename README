@@ -1,9 +1,9 @@
-= Authorization for MVC-based web applications in Ruby
+= Role-based Authorization for MVC-based web applications in Ruby
 
-Authorization is a mixin that implements authorization for MVC-based web applications in Ruby. It is meant to be an extremely simple implementation of authorization.
+Authorization is a mixin that implements role-based authorization for MVC-based web applications in Ruby. It is meant to be an extremely simple implementation.
 
 == Features
- * Simple implementation of authorization (~ 50 lines of code).
+ * Simple implementation of role-based authorization (~ 50 lines of code).
  * Uses a whitelist approach. Everything is unauthorized by default, you explicitly specify what is authorized.
  * Works with any authentication plugin (restful_authentication, authlogic, ...)
  * Works with any MVC-based Ruby web framework (I have used it with Rails and Merb)
