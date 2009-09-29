@@ -1,23 +1,20 @@
 = Authorization for MVC-based web applications in Ruby
 
-Authorization is a mixin that implements authorization for MVC-based web 
-applications in Ruby. It is meant to be an extremely simple implementation of authorization.
+Authorization is a mixin that implements authorization for MVC-based web applications in Ruby. It is meant to be an extremely simple implementation of authorization.
 
 == Features
- * Simple implementation of authorization
- * Whitelist approach. Everything is unauthorized by default, you explecitely state what is authorized.
- * Works with any authentication plugin (restful_auth, authlogic, ...)
+ * Simple implementation of authorization (~ 50 lines of code).
+ * Uses a whitelist approach. Everything is unauthorized by default, you explicitly specify what is authorized.
+ * Works with any authentication plugin (restful_authentication, authlogic, ...)
  * Works with any MVC-based Ruby web framework (I have used it with Rails and Merb)
  * Test suite using rspec
 
 == Motivation
 
-I've been using role_requirement in my Rails apps for a while and it's an awesome plugin.
-However, while using it I found out that it was easier for me to think about
-authorization a little bit differently (using whitelist approach):
+I've been using the role_requirement plugin in many Rails applications and it's an awesome plugin.
+However, while using it I found that a whitelist approach was an easier way for me to think about authorization:
 
-With the Authorization mixin, by default no controller action is authorized to anybody, then you explicitly states
-what is authorized to which role in each controller:
+Using the Authorization mixin, everything is unauthorized by default, you explicitly specify which actions are authorized for each controller.
 
   class FooController < ApplicationController
     authorize :admin
@@ -26,33 +23,22 @@ what is authorized to which role in each controller:
     ...
   end
 
-role_requirement is also specially tailored to Rails and restful_authentication.
-There are other awesome frameworks and authentication plugins out there.
+The role_requirement plugin is also specially tailored to Rails and restful_authentication. There are other awesome frameworks and authentication plugins out there.
 
-However, if you need authorization for Rails with restful_authentication, 
-I recommend you to have a look at the role_requirement plugin, it
-can do a lot more for you (like generating your
-Role models with migrations).
+However, if you need authorization for Rails and you already use restful_authentication, I recommend you to have a look at the role_requirement plugin, it can do a lot more for you (like generating your Role models with migrations).
 
 
 == Install
 
-Authorization is implemented as a single file (lib/authorization.rb), 
-simply drop it into your lib/ folder or elsewhere.
+Authorization is implemented as a single file (lib/authorization.rb), simply drop it into your lib/ folder or elsewhere.
 
 == Getting Started (for Rails as an example)
 
 1. Include the Authorization mixin into your application controller.
 
-2. Set a before filter that calls the ensure_authorization! method.
-The method will throw a Authorization::Unauthorized exception if
-the authorization fails. Using rescue_for you can handle the exception.
+2. Set a before filter that calls the ensure_authorization! method. The method will throw a Authorization::Unauthorized exception if the authorization fails. Using rescue_for you can handle the exception.
 
-3. The ensure_authorization! method expects a current_user method that
-returns the currently logged in user. It also expects to get the requested action
-from params[:action]. You could change those defaults by overriding the
-ensure_authorization! method, it is a one-liner method.
-
+3. The ensure_authorization! method expects a current_user method that returns the currently logged in user. It also expects to get the requested action from params[:action]. You could change those defaults by overriding the ensure_authorization! method, it is a one-liner method.
 
   class ApplicationController
     include Authorization
@@ -68,9 +54,8 @@ ensure_authorization! method, it is a one-liner method.
 
   end
 
-Authorization also expects the class of the object returned from
-current_user (the User class) to have a has_role? method
-that checks whether the current user has the given role.
+
+Authorization also expects the class of the object returned from current_user (the User class) to have a has_role? method that checks whether the current user has the given role.
 
   class User
     def has_role?(role)
@@ -91,7 +76,7 @@ that checks whether the current user has the given role.
 
 == Examples
 
-Authorize the admin for all actions:
+Authorize the admin for all actions of the controller:
 
   class FooController < ApplicationController
     authorize :admin
@@ -99,7 +84,7 @@ Authorize the admin for all actions:
     ...
   end
 
-Authorize only specific actions:
+You can authorize only specific actions:
 
   class FooController < ApplicationController
     authorize :manager, :only => [:index, :show]
@@ -107,7 +92,7 @@ Authorize only specific actions:
     ...
   end
 
-Authorize all actions except specified ones:
+You can authorize all actions except specified ones:
 
   class FooController < ApplicationController
     authorize :manager, :except => [:new, :create]
@@ -123,7 +108,7 @@ You can also specify multiple roles:
     ...
   end
 
-To authorize a controller's actions for all user included not logged in
+You can authorize actions for all users including unauthenticated users (current_user returns nil):
 
   class FooController < ApplicationController
     authorize :public
@@ -131,7 +116,7 @@ To authorize a controller's actions for all user included not logged in
     ...
   end
 
-You can combine authorization rules
+You can combine authorization rules:
 
   class FooController < ApplicationController
     authorize :admin
@@ -143,8 +128,7 @@ You can combine authorization rules
 
 == Acknowledgements
 
-Part of this mixin was inspired from the role_requirement plugin by Tim Charper:
-http://github.com/timcharper/role_requirement
+Part of this mixin was inspired from the role_requirement plugin by Tim Charper: http://github.com/timcharper/role_requirement
 
 
 
